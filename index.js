@@ -48,6 +48,24 @@ async function run() {
             res.send(result)
         })
         
+        app.put('/products/:id', async(req,res)=>{
+            const id= req.params.id;
+            const product = req.body;
+            const filter = {_id: new ObjectId(id)}
+            const options = {upsert: true};
+            const updateProduct = {
+                $set:{
+                     photo : product.photo,
+                     productName : product.productName,
+                     type : product.type,
+                     brand : product.brand,
+                     price : product.price,
+                     rating : product.rating
+                }
+            }
+            const result = await productsCollection.updateOne(filter,updateProduct,options)
+            res.send(result)
+        })
         //add to cart
 
         app.get('/carts', async(req,res)=>{
@@ -59,9 +77,9 @@ async function run() {
 
         app.post('/carts', async(req,res)=>{
             const cart = req.body;
-            console.log(cart);
+           
             const result = await cartCollection.insertOne(cart)
-            console.log(result)
+           
             res.send(result)
             
         })
